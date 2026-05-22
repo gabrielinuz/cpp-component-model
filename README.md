@@ -6,7 +6,7 @@
 
 ---
 
-## 🛠️ Decisiones Técnicas Clave
+## ⧉ Decisiones Técnicas Clave
 
 ### 1. Frontera del ABI Segura (C-API y `noexcept`)
 Para evitar la incompatibilidad de nombres (*name mangling*) entre diferentes compiladores o versiones de la biblioteca estándar, toda exportación en el binario dinámico se realiza mediante una interfaz puramente en C utilizando `extern "C"`. 
@@ -29,7 +29,7 @@ Se rechazó el uso de cortes abruptos mediante `std::exit(EXIT_FAILURE)` dentro 
 
 ---
 
-## 🗂️ Componentes del Proyecto
+## ⧉ Componentes del Proyecto
 
 * **`main.cpp`**: Punto de entrada declarativo y limpio de validaciones estructuradas. Atrapa errores fatales globales de infraestructura.
 * **`IComponent.hpp`**: Define el contrato del ciclo de vida base del componente, la versión del ABI (`CURRENT_API_VERSION`) y los tipos de punteros a función de la C-API.
@@ -39,7 +39,7 @@ Se rechazó el uso de cortes abruptos mediante `std::exit(EXIT_FAILURE)` dentro 
 * **`Application.hpp`**: Orquestador de la lógica de negocio del Host.
 * **`GreeterComponent.cpp`**: Implementación de la funcionalidad del plugin y exportación explícita de las funciones factoría de la C-API.
 
-## 🚀 Compilación
+## ⧉ Compilación
 
 Asegúrate de compilar utilizando el estándar C++17 o superior para soportar de forma nativa las características estructurales del código:
 
@@ -56,7 +56,7 @@ g++ -std=c++17 main.cpp -o hostApp.bin -ldl
 # 3. Ejecutar la aplicación
 ./hostApp.bin
 ```
-## 🚀 Estructura de directorios
+## ⧉ Estructura de directorios
 ```text
 ├── include/
 │   ├── Application.hpp     # Clase Orquestadora de la lógica de negocio de la aplicación.
