@@ -56,7 +56,7 @@ g++ -std=c++17 main.cpp -o hostApp.bin -ldl
 # 3. Ejecutar la aplicación
 ./hostApp.bin
 ```
-
+## 🚀 Estructura de directorios
 ```text
 ├── include/
 │   ├── Application.hpp     # Clase Orquestadora de la lógica de negocio de la aplicación.
@@ -66,5 +66,7 @@ g++ -std=c++17 main.cpp -o hostApp.bin -ldl
 │   ├── SharedLibrary.hpp   # Clase RAII para gestionar el ciclo de vida de una biblioteca dinámica.
 ├── lib/
 │   ├── Directorio destino para las bibliotecas dinámicas "Componentes" compilados.
-├── lib/
+├── logo/
+│   ├── Logo de la aplicación.
+├── src/
 │   ├── Greeter.cpp         # Implementación del componente Greeter.
