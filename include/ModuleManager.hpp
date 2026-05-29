@@ -117,12 +117,21 @@ class ModuleManager
                                          ", Encontrado: " + std::to_string(moduleApiVersion));
             }
 
+            /**
+             * @brief Invocamos a la DLL mediante su función creadora
+             * para crear el objeto en su propio heap
+             */
             IComponent* rawInstance = createFunc();
             if (!rawInstance) 
             {
                 throw std::runtime_error("ModuleManager Error: La fábrica de la DLL devolvió una instancia nula.");
             }
 
+            /**
+             * @brief Casteamos a la interfaz solicitada
+             * @details luego si este casteo falla (entrega un puntero nulo)
+             * limpiamos para evitar fugas invocando a la función de destrucción del componente.
+             */
             InterfaceType* castedInstance = dynamic_cast<InterfaceType*>(rawInstance);
             if (!castedInstance)
             {
@@ -130,6 +139,11 @@ class ModuleManager
                 throw std::runtime_error("ModuleManager Error: El componente " + moduleName + " no implementa la interfaz solicitada.");
             }
 
+            /** 
+             * @attention LA MAGIA Creamos un shared_ptr con un custom deleter.
+             * @details Capturamos el puntero a la función de destrucción y el shared_ptr de la biblioteca.
+             * Esto asegura que la DLL no se descargue de memoria mientras la instancia exista.
+             */
             auto deleter = [destroyFunc, lib](InterfaceType* ptr)
             {
                 destroyFunc(ptr);
