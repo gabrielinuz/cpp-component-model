@@ -48,9 +48,10 @@ class IComponent
 
 /**
  * @brief Tipos de punteros a función exportados (C-API).
- * @details Todas las funciones que cruzan el límite de la DLL están marcadas
- * con 'noexcept' garantizando que el compilador aborte el programa internamente 
- * si ocurre un error no manejado, en lugar de corromper la pila del Host.
+ * @details Todas las funciones que cruzan el límite de la biblioteca compartida
+ * están marcadas con 'noexcept' garantizando que el compilador aborte el 
+ * programa internamente  si ocurre un error no manejado, en lugar de corromper 
+ * la pila del Host.
  */
 extern "C" 
 {

@@ -64,7 +64,7 @@ class GreeterComponent : public IGreeter
 // --- EXPORTACIÓN DE C-API ---
 
 /**
- * @brief Expone la versión con la que fue compilada esta DLL.
+ * @brief Expone la versión con la que fue compilada esta biblioteca compartida.
  */
 extern "C" int getApiVersion() noexcept 
 {

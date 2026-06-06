@@ -106,7 +106,7 @@ class ModuleManager
 
             /**
              * @brief Control de versiones estricto.
-             * @details Comparamos la versión de la interfaz con la que compiló la DLL
+             * @details Comparamos la versión de la interfaz con la que compiló la biblioteca compartida
              * contra la versión actual que maneja el Host. Si difieren, abortamos por excepción.
              */
             int moduleApiVersion = getApiFunc();
@@ -118,13 +118,13 @@ class ModuleManager
             }
 
             /**
-             * @brief Invocamos a la DLL mediante su función creadora
+             * @brief Invocamos a la biblioteca compartida mediante su función creadora
              * para crear el objeto en su propio heap
              */
             IComponent* rawInstance = createFunc();
             if (!rawInstance) 
             {
-                throw std::runtime_error("ModuleManager Error: La fábrica de la DLL devolvió una instancia nula.");
+                throw std::runtime_error("ModuleManager Error: La fábrica de la biblioteca devolvió una instancia nula.");
             }
 
             /**
@@ -142,7 +142,7 @@ class ModuleManager
             /** 
              * @attention LA MAGIA Creamos un shared_ptr con un custom deleter.
              * @details Capturamos el puntero a la función de destrucción y el shared_ptr de la biblioteca.
-             * Esto asegura que la DLL no se descargue de memoria mientras la instancia exista.
+             * Esto asegura que la biblioteca compartida no se descargue de memoria mientras la instancia exista.
              */
             auto deleter = [destroyFunc, lib](InterfaceType* ptr)
             {
