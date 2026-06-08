@@ -70,3 +70,10 @@ g++ -std=c++17 main.cpp -o hostApp.bin -ldl
 │   ├── Logo de la aplicación.
 ├── src/
 │   ├── Greeter.cpp         # Implementación del componente Greeter.
+```
+## ⧉ Diagrama de componentes
+# <img src="doc/Diagrama_de_componentes.png" align="center"> 
+## ⧉ Diagrama de clases
+# <img src="doc/Diagrama_de_clases.png" align="center"> 
+## ⧉ Diagrama de secuencia
+# <img src="doc/Diagrama_de_secuencia.png" align="center"> 
