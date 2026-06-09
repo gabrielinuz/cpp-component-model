@@ -1,3 +1,10 @@
+#!/bin/bash
+# Forzar que el script termine si algún comando falla
+set -e
+
+# Asegurar la existencia del directorio de destino para los módulos
+mkdir -p lib
+
 # 1. Compilar el Componente como una Biblioteca Compartida (Dynamic Shared Object)
 # Usamos -fPIC (Position Independent Code) vital para bibliotecas compartidas en Linux
 g++ -std=c++17 -c -fPIC src/greeter_component.cpp -o greeter_component.o
