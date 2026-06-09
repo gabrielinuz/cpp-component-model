@@ -9,7 +9,7 @@
  * @link https://opensource.org/licenses/MIT @endlink
  * 
  */
-#include "include/Application.hpp"
+#include "include/application.hpp"
 #include <iostream>
 #include <stdexcept>
 

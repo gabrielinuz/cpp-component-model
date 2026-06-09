@@ -19,10 +19,10 @@ Toda la lógica interna del componente se envuelve en bloques `try-catch (...)` 
 
 ### 3. Gestión Automática de Memoria Cruzada (RAII con Custom Deleters)
 Para prevenir el clásico error de liberar memoria en el Host que fue reservada dentro de un módulo dinámico (con diferentes *heaps* de asignación), el ciclo de vida se controla mediante `std::shared_ptr`.
-`ModuleManager` inyecta un *deleter personalizado* en el puntero inteligente que retiene una referencia al binario `SharedLibrary` cargado en memoria y despacha la destrucción explícita llamando a la función exportada `destroyComponent` del módulo. El binario dinámico nunca se descargará con `dlclose()` mientras exista una instancia activa en el Host.
+`ModuleManager` inyecta un *deleter personalizado* en el puntero inteligente que retiene una referencia al binario `SharedLibrary` cargado en memoria y despacha la destrucción explícita llamando a la función exportada `destroy_component` del módulo. El binario dinámico nunca se descargará con `dlclose()` mientras exista una instancia activa en el Host.
 
 ### 4. Seguridad de Hilos y Concurrencia Primitiva
-El mapa interno de bibliotecas cargadas (`loadedLibraries`) dentro del `ModuleManager` se encuentra protegido de accesos concurrentes asíncronos mediante exclusión mutua con `std::mutex` y bloqueos estructurados de tipo `std::lock_guard`. Esto garantiza la estabilidad del sistema si múltiples hilos del Host intentan instanciar o cargar componentes de forma simultánea.
+El mapa interno de bibliotecas cargadas (`loaded_libraries_`) dentro del `ModuleManager` se encuentra protegido de accesos concurrentes asíncronos mediante exclusión mutua con `std::mutex` y bloqueos estructurados de tipo `std::lock_guard`. Esto garantiza la estabilidad del sistema si múltiples hilos del Host intentan instanciar o cargar componentes de forma simultánea.
 
 ### 5. Rechazo a `std::exit` en Infraestructura (Propagación vía Excepciones)
 Se rechazó el uso de cortes abruptos mediante `std::exit(EXIT_FAILURE)` dentro del mánager de módulos. Invocar `std::exit` aborta el programa omitiendo el desenredo de la pila (*stack unwinding*), impidiendo la ejecución de destructores locales activos y dejando descriptores o recursos abiertos. En su lugar, los fallos de infraestructura se elevan limpiamente al Host mediante `std::runtime_error`, permitiendo una finalización ordenada y segura.
@@ -32,12 +32,12 @@ Se rechazó el uso de cortes abruptos mediante `std::exit(EXIT_FAILURE)` dentro 
 ## ⧉ Componentes del Proyecto
 
 * **`main.cpp`**: Punto de entrada declarativo y limpio de validaciones estructuradas. Atrapa errores fatales globales de infraestructura.
-* **`IComponent.hpp`**: Define el contrato del ciclo de vida base del componente, la versión del ABI (`CURRENT_API_VERSION`) y los tipos de punteros a función de la C-API.
-* **`IGreeter.hpp`**: Interfaz de negocio pura compatible con el ABI para la funcionalidad de saludo.
-* **`SharedLibrary.hpp`**: Encapsulación RAII multiplataforma para las llamadas del sistema nativas (`dlopen`/`LoadLibrary`, `dlclose`/`FreeLibrary`).
-* **`ModuleManager.hpp`**: Factoría genérica encargada de validar la compatibilidad binaria del ABI y resolver instancias polimórficas de forma segura.
-* **`Application.hpp`**: Orquestador de la lógica de negocio del Host.
-* **`GreeterComponent.cpp`**: Implementación de la funcionalidad del plugin y exportación explícita de las funciones factoría de la C-API.
+* **`i_component.hpp`**: Define el contrato del ciclo de vida base del componente, la versión del ABI (`CURRENT_API_VERSION`) y los tipos de punteros a función de la C-API.
+* **`i_greeter.hpp`**: Interfaz de negocio pura compatible con el ABI para la funcionalidad de saludo.
+* **`shared_library.hpp`**: Encapsulación RAII multiplataforma para las llamadas del sistema nativas (`dlopen`/`LoadLibrary`, `dlclose`/`FreeLibrary`).
+* **`module_manager.hpp`**: Factoría genérica encargada de validar la compatibilidad binaria del ABI y resolver instancias polimórficas de forma segura.
+* **`application.hpp`**: Orquestador de la lógica de negocio del Host.
+* **`greeter_component.cpp`**: Implementación de la funcionalidad del plugin y exportación explícita de las funciones factoría de la C-API.
 
 ## ⧉ Compilación
 
@@ -46,30 +46,31 @@ Asegúrate de compilar utilizando el estándar C++17 o superior para soportar de
 ```bash
 # 1. Compilar el Componente como una Biblioteca Compartida (Dynamic Shared Object)
 # Usamos -fPIC (Position Independent Code) vital para bibliotecas compartidas en Linux
-g++ -std=c++17 -c -fPIC src/GreeterComponent.cpp -o GreeterComponent.o
-g++ -std=c++17 -shared -o lib/Greeter.so GreeterComponent.o
+g++ -std=c++17 -c -fPIC src/greeter_component.cpp -o greeter_component.o
+g++ -std=c++17 -shared -o lib/greeter.so greeter_component.o
 
 # 2. Compilar el Ejecutable Principal
 # Necesitamos enlazar la biblioteca -ldl para poder usar dlopen, dlclose, dlsym en Linux
-g++ -std=c++17 main.cpp -o hostApp.bin -ldl
+g++ -std=c++17 main.cpp -o host_app.bin -ldl
 
 # 3. Ejecutar la aplicación
-./hostApp.bin
+./host_app.bin
 ```
 ## ⧉ Estructura de directorios
 ```text
+├── doc/                        # Documentación y modelos UML
 ├── include/
-│   ├── Application.hpp     # Clase Orquestadora de la lógica de negocio de la aplicación.
-│   ├── Component.hpp       # Interfaz base para todos los componentes.
-│   ├── Greeter.hpp         # Interfaz específica para el componente Greeter.
-│   ├── ModuleManager.hpp   # Gestor central de módulos que resuelve la instanciación segura.
-│   ├── SharedLibrary.hpp   # Clase RAII para gestionar el ciclo de vida de una biblioteca dinámica.
+│   ├── application.hpp         # Clase Orquestadora de la lógica de negocio de la aplicación.
+│   ├── i_component.hpp         # Interfaz base para todos los componentes.
+│   ├── i_greeter.hpp           # Interfaz específica para el componente Greeter.
+│   ├── module_manager.hpp      # Gestor central de módulos que resuelve la instanciación segura.
+│   ├── shared_library.hpp      # Clase RAII para gestionar el ciclo de vida de una biblioteca dinámica.
 ├── lib/
 │   ├── Directorio destino para las bibliotecas dinámicas "Componentes" compilados.
 ├── logo/
 │   ├── Logo de la aplicación.
 ├── src/
-│   ├── Greeter.cpp         # Implementación del componente Greeter.
+│   ├── greeter_component.cpp   # Implementación del componente Greeter.
 ```
 ## ⧉ Diagrama de componentes
 # <img src="doc/Diagrama_de_componentes.png" align="center"> 

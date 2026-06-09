@@ -1,5 +1,5 @@
 /**
- * @file SharedLibrary.hpp
+ * @file shared_library.hpp
  * @author Gabriel Ferreira (gabrielinuz@fi.mdp.edu.ar)
  * @brief C Plus Plus Component Model
  * @version 1
@@ -36,25 +36,25 @@
 class SharedLibrary 
 {
     private:
-        void* handle;
-        std::string path;
+        void* handle_;
+        std::string path_;
 
     public:
         /**
         * @brief Constructor que intenta cargar la biblioteca.
-        * @param libPath Ruta de la biblioteca (sin la extensión del SO).
+        * @param lib_path Ruta de la biblioteca (sin la extensión del SO).
         * @throws std::runtime_error Si la biblioteca no se puede cargar.
         */
-        explicit SharedLibrary(const std::string& libPath) : path(libPath + LIB_EXTENSION) 
+        explicit SharedLibrary(const std::string& lib_path) : path_(lib_path + LIB_EXTENSION) 
         {
             #ifdef _WIN32
-                handle = LoadLibrary(path.c_str());
+                handle_ = LoadLibrary(path_.c_str());
             #else
-                handle = dlopen(path.c_str(), RTLD_NOW | RTLD_LOCAL);
+                handle_ = dlopen(path_.c_str(), RTLD_NOW | RTLD_LOCAL);
             #endif
-                if (!handle) 
+                if (!handle_) 
                 {
-                    throw std::runtime_error("Error al cargar la biblioteca: " + path);
+                    throw std::runtime_error("Error al cargar la biblioteca: " + path_);
                 }
         }
 
@@ -63,31 +63,31 @@ class SharedLibrary
         */
         ~SharedLibrary()
         {
-            if (handle) 
+            if (handle_) 
             {
                 #ifdef _WIN32
-                    FreeLibrary((HINSTANCE)handle);
+                    FreeLibrary((HINSTANCE)handle_);
                 #else
-                    dlclose(handle);
+                    dlclose(handle_);
                 #endif
             }
         }
 
-        // Prevenimos la copia para evitar cerrar el handle accidentalmente
+        // Prevenimos la copia para evitar cerrar el handle_ accidentalmente
         SharedLibrary(const SharedLibrary&) = delete;
         SharedLibrary& operator=(const SharedLibrary&) = delete;
 
         /**
         * @brief Obtiene un símbolo (función) exportado por la biblioteca.
-        * @param symbolName Nombre de la función exportada.
+        * @param symbol_name Nombre de la función exportada.
         * @return Puntero a la función, o nullptr si no se encuentra.
         */
-        void* getSymbol(const std::string& symbolName) 
+        void* get_symbol(const std::string& symbol_name) 
         {
             #ifdef _WIN32
-                return (void*)GetProcAddress((HINSTANCE)handle, symbolName.c_str());
+                return (void*)GetProcAddress((HINSTANCE)handle_, symbol_name.c_str());
             #else
-                return dlsym(handle, symbolName.c_str());
+                return dlsym(handle_, symbol_name.c_str());
             #endif
         }
 };

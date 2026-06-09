@@ -1,5 +1,5 @@
 /**
- * @file Application.hpp
+ * @file application.hpp
  * @author Gabriel Ferreira (gabrielinuz@fi.mdp.edu.ar)
  * @brief C Plus Plus Component Model
  * @version 1
@@ -13,8 +13,8 @@
 #ifndef APPLICATION_HPP
 #define APPLICATION_HPP
 
-#include "ModuleManager.hpp"
-#include "IGreeter.hpp"
+#include "module_manager.hpp"
+#include "i_greeter.hpp"
 
 /**
  * @brief Clase Orquestadora de la lógica de negocio de la aplicación.
@@ -24,7 +24,7 @@
 class Application 
 {
     private:
-        ModuleManager moduleManager;
+        ModuleManager module_manager_;
 
     public:
         Application() = default;
@@ -36,7 +36,7 @@ class Application
         void initialize() 
         {
             // La infraestructura reporta errores hacia arriba vía excepciones
-            moduleManager.loadModule("./lib/Greeter");
+            module_manager_.load_module("./lib/greeter");
         }
 
         /**
@@ -46,7 +46,7 @@ class Application
         int run() 
         {
             // El mánager garantiza que la instancia es válida o lanza excepción previa
-            auto greeter = moduleManager.createInstance<IGreeter>("Greeter");
+            auto greeter = module_manager_.create_instance<IGreeter>("greeter");
 
             char buffer[256];
             

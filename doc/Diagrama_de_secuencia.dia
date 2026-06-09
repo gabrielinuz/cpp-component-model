@@ -792,7 +792,7 @@
         <dia:point val="34.5836,-58.7285"/>
       </dia:attribute>
       <dia:attribute name="text">
-        <dia:string>#loadModule("./lib/Greeter")#</dia:string>
+        <dia:string>#load_module("./lib/Greeter")#</dia:string>
       </dia:attribute>
       <dia:attribute name="type">
         <dia:enum val="0"/>
@@ -878,7 +878,7 @@
         <dia:point val="34.5836,-51.2285"/>
       </dia:attribute>
       <dia:attribute name="text">
-        <dia:string>#createInstance&lt;IGreeter&gt;("Greeter")#</dia:string>
+        <dia:string>#create_instance&lt;IGreeter&gt;("Greeter")#</dia:string>
       </dia:attribute>
       <dia:attribute name="type">
         <dia:enum val="0"/>
@@ -921,7 +921,7 @@
         <dia:point val="52.8045,-50.7285"/>
       </dia:attribute>
       <dia:attribute name="text">
-        <dia:string>#getSymbol("getApiVersion")#</dia:string>
+        <dia:string>#get_symbol("get_api_version")#</dia:string>
       </dia:attribute>
       <dia:attribute name="type">
         <dia:enum val="0"/>
@@ -1153,7 +1153,7 @@
         <dia:point val="52.8045,-47.7285"/>
       </dia:attribute>
       <dia:attribute name="text">
-        <dia:string>#getSymbol("createComponent")#</dia:string>
+        <dia:string>#get_symbol("create_component")#</dia:string>
       </dia:attribute>
       <dia:attribute name="type">
         <dia:enum val="0"/>
@@ -1196,7 +1196,7 @@
         <dia:point val="52.8045,-44.7285"/>
       </dia:attribute>
       <dia:attribute name="text">
-        <dia:string>#getSymbol("destroyComponent")#</dia:string>
+        <dia:string>#get_symbol("destroy_component")#</dia:string>
       </dia:attribute>
       <dia:attribute name="type">
         <dia:enum val="0"/>
@@ -1667,7 +1667,7 @@
         <dia:point val="64.8287,-38.7323"/>
       </dia:attribute>
       <dia:attribute name="text">
-        <dia:string>#Invoca el puntero de createComponent()#</dia:string>
+        <dia:string>#Invoca el puntero de create_component()#</dia:string>
       </dia:attribute>
       <dia:attribute name="type">
         <dia:enum val="0"/>
@@ -2027,7 +2027,7 @@
             <dia:string>#Validación interna: 
 ModuleManager ejecuta
 el puntero de 
-getApiVersion() 
+get_api_version() 
 y compara enteros.#</dia:string>
           </dia:attribute>
           <dia:attribute name="font">

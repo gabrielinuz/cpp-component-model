@@ -1,5 +1,5 @@
 /**
- * @file IGreeter.hpp
+ * @file i_greeter.hpp
  * @author Gabriel Ferreira (gabrielinuz@fi.mdp.edu.ar)
  * @brief C Plus Plus Component Model
  * @version 1
@@ -13,7 +13,7 @@
 #ifndef IGREETER_HPP
 #define IGREETER_HPP
 
-#include "IComponent.hpp"
+#include "i_component.hpp"
 #include <cstddef>
 
 /**
@@ -28,12 +28,12 @@ class IGreeter : public IComponent
          * evitar cruzar el límite del ABI con std::string.
          *
          * @param name Nombre de la persona a saludar.
-         * @param outBuffer Puntero al buffer donde se escribirá el resultado.
-         * @param bufferSize Tamaño máximo del buffer para evitar desbordamientos.
+         * @param out_buffer Puntero al buffer donde se escribirá el resultado.
+         * @param buffer_size Tamaño máximo del buffer para evitar desbordamientos.
          * @details Retorna ComponentResult en lugar de void para el manejo de errores.
          * Marcado estrictamente como 'noexcept'.
          */
-        virtual ComponentResult greet(const char* name, char* outBuffer, size_t bufferSize) noexcept = 0;
+        virtual ComponentResult greet(const char* name, char* out_buffer, size_t buffer_size) noexcept = 0;
 };
 
 #endif // IGREETER_HPP

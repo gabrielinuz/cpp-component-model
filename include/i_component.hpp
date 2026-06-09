@@ -1,5 +1,5 @@
 /**
- * @file Component.hpp
+ * @file i_component.hpp
  * @author Gabriel Ferreira (gabrielinuz@fi.mdp.edu.ar)
  * @brief C Plus Plus Component Model
  * @version 1
@@ -55,9 +55,9 @@ class IComponent
  */
 extern "C" 
 {
-    typedef int (*GetApiVersionFunc)() noexcept;
-    typedef IComponent* (*CreateComponentFunc)() noexcept;
-    typedef void (*DestroyComponentFunc)(IComponent*) noexcept;
+    typedef int (*get_api_version_func)() noexcept;
+    typedef IComponent* (*create_component_func)() noexcept;
+    typedef void (*destroy_component_func)(IComponent*) noexcept;
 }
 
 #endif // ICOMPONENT_HPP

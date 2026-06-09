@@ -347,9 +347,9 @@
         <dia:composite type="text">
           <dia:attribute name="string">
             <dia:string>#Funciones externas:
-*getApiVersion, 
-*createComponent, 
-*destroyComponent
+*get_api_version, 
+*create_component, 
+*destroy_component
 Obtenidas a través
 de ModuleManager#</dia:string>
           </dia:attribute>
