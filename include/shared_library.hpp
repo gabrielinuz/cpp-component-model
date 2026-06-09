@@ -50,11 +50,29 @@ class SharedLibrary
             #ifdef _WIN32
                 handle_ = LoadLibrary(path_.c_str());
             #else
+                // Limpiamos errores previos antes de invocar dlopen
+                dlerror(); 
                 handle_ = dlopen(path_.c_str(), RTLD_NOW | RTLD_LOCAL);
             #endif
+
                 if (!handle_) 
                 {
-                    throw std::runtime_error("Error al cargar la biblioteca: " + path_);
+                    std::string error_details = "Error al cargar la biblioteca: " + path_;
+                    #ifndef _WIN32
+                        /** 
+                        * @details dlopen proporciona la función dlerror() para obtener la cadena 
+                        * exacta de texto que explica detalladamente por qué falló la operación 
+                        * (por ejemplo: si el archivo no existe, si faltan permisos, o si hay un 
+                        * símbolo no resuelto).La terminal indica explícitamente el símbolo faltante
+                        * de hilos, evitando tener que adivinar la causa del puntero nulo.
+                        */
+                        const char* dl_err_str = dlerror();
+                        if (dl_err_str) 
+                        {
+                            error_details += " (Detalle del SO: " + std::string(dl_err_str) + ")";
+                        }
+                    #endif
+                    throw std::runtime_error(error_details);
                 }
         }
 
