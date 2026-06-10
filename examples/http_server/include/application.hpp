@@ -37,9 +37,9 @@ class Application
             if (!server_) return;
 
             // Servir archivos estáticos para la interfaz de usuario
-            server_->serve_static("/", "index.html", "text/html");
-            server_->serve_static("/style.css", "style.css", "text/css");
-            server_->serve_static("/script.js", "script.js", "application/javascript");
+            server_->serve_static("/", "www/index.html", "text/html");
+            server_->serve_static("/style.css", "www/style.css", "text/css");
+            server_->serve_static("/script.js", "www/script.js", "application/javascript");
 
             // ==========================================
             // CONFIGURACIÓN DE ENDPOINTS CRUD
