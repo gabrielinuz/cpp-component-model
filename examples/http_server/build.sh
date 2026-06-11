@@ -12,7 +12,10 @@ g++ -std=c++17 -shared -pthread -o lib/http_server.so http_server_component.o
 
 # 2. Compilar el Ejecutable Principal (Host)
 # Enlazamos -ldl para dlopen y -pthread para dar soporte al entorno multihilo del componente cargado.
-g++ -std=c++17 main.cpp -o host_app.bin -ldl -pthread
+g++ -std=c++17 main.cpp -o host.app -ldl -pthread
 
 # 3. Ejecutar la aplicación
-./host_app.bin
+./host.app
+
+# 4. Limpieza opcional de objetos intermedios
+rm *.o
