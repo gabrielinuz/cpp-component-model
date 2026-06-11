@@ -83,6 +83,7 @@ class HttpResponse
         HttpStatusCode status_code_{HttpStatusCode::OK};
         std::unordered_map<std::string, std::string> headers_;
         std::string body_;
+        std::string file_path_;
 
     public:
         HttpResponse& set_status(HttpStatusCode code) { status_code_ = code; return *this; }
@@ -126,6 +127,19 @@ class HttpResponse
         HttpStatusCode get_status() const 
         {
             return status_code_;
+        }
+        
+        HttpResponse& set_file(const std::string& filepath, const std::string& content_type, size_t file_size) 
+        {
+            file_path_ = filepath;
+            set_header("Content-Type", content_type);
+            set_header("Content-Length", std::to_string(file_size));
+            return *this;
+        }
+
+        const std::string& get_file_path() const 
+        {
+            return file_path_;
         }
 };
 

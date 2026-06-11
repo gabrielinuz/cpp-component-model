@@ -4,6 +4,7 @@
 
 Al utilizar C++ para el núcleo y un modelo de componentes dinámicos, se garantiza que el servidor pueda ejecutarse de manera eficiente incluso en hardware recuperado o netbooks educativas con apenas 2GB de RAM, cumpliendo estrictamente con los objetivos del modelo **GREENSOFT**.
 
+## Credenciales de administrador: `admin123`
 ---
 
 ## ⧉ Impacto y Sostenibilidad (EdTech)
@@ -120,4 +121,5 @@ El componente `HttpServer` expone los siguientes puntos de enlace (*endpoints*) 
 ├── data/                    
 │   └── intraned.db          # Base de datos relacional local (SQLite)
 ├── uploads/                 # Almacenamiento físico aislado de los recursos educativos
+├── vendor/                  # Bibliotecas de terceros
 └── www/                     # Directorio de entrega de activos estáticos web

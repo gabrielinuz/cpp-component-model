@@ -11,6 +11,8 @@
 #include <string>
 #include <sys/stat.h>
 
+#include <cstdio> // Para dar soporte a la función std::remove()
+
 using json = nlohmann::json;
 
 class Application 
@@ -76,16 +78,18 @@ class Application
                 }
             });
 
-            // --- 3. API: LECTURA DE RECURSOS (Sustituye a metadata.json) ---
+            // --- 3. API: LECTURA DE RECURSOS (Actualizado con ID) ---
             server_->get("/api/contenidos", [this](const HttpRequest&) 
             {
                 ResultSet rs;
-                db_->query("SELECT titulo, autor, tema, filename as file FROM recursos;", {}, rs);
+                // Agregamos 'id' a la proyección de la consulta
+                db_->query("SELECT id, titulo, autor, tema, filename as file FROM recursos;", {}, rs);
 
                 json db_json = {{"contenidos", json::array()}};
                 for (const auto& row : rs) 
                 {
                     db_json["contenidos"].push_back({
+                        {"id", row.at("id")}, // Exponemos el ID para el frontend
                         {"titulo", row.at("titulo")},
                         {"autor", row.at("autor")},
                         {"tema", row.at("tema")},
@@ -137,19 +141,76 @@ class Application
                 return HttpResponse().set_status(HttpStatusCode::InternalServerError).set_body("{\"error\": \"Error en base de datos\"}", "application/json");
             });
 
-            // --- 5. ENTREGA DINÁMICA DE ARCHIVOS (El servidor de la isla) ---
-            server_->get("/recursos", [this](const HttpRequest& req) 
+            // --- 4.5 API: BORRADO DE RECURSOS (Físico y Lógico) ---
+            server_->del("/api/contenidos", [this](const HttpRequest& req) 
             {
-                std::string file_requested = req.get_query_param("f"); // ej: /recursos?f=libro.pdf
-                if (file_requested.empty()) return HttpResponse().set_status(HttpStatusCode::BadRequest);
+                // 1. Control de Autorización
+                if (req.get_header("Authorization") != ADMIN_TOKEN) 
+                {
+                    return HttpResponse().set_status(HttpStatusCode::Forbidden).set_body("{\"error\": \"Token invalido\"}", "application/json");
+                }
 
-                std::string filepath = UPLOAD_DIR + file_requested;
-                std::ifstream file(filepath, std::ios::in | std::ios::binary);
+                std::string id_str = req.get_query_param("id");
+                if (id_str.empty()) 
+                {
+                    return HttpResponse().set_status(HttpStatusCode::BadRequest).set_body("{\"error\": \"Se requiere el ID del recurso\"}", "application/json");
+                }
+
+                // 2. Extracción segura del nombre de archivo desde la DB (Previene Path Traversal)
+                ResultSet rs;
+                db_->query("SELECT filename FROM recursos WHERE id = ?;", {id_str}, rs);
+                if (rs.empty()) 
+                {
+                    return HttpResponse().set_status(HttpStatusCode::NotFound).set_body("{\"error\": \"Recurso no encontrado\"}", "application/json");
+                }
+
+                std::string filename = rs[0].at("filename");
+                std::string filepath = UPLOAD_DIR + filename;
+
+                // 3. Borrado físico del disco (Si falla, se ignora, el archivo pudo haber sido borrado manualmente)
+                std::remove(filepath.c_str());
+
+                // 4. Borrado lógico de la base de datos
+                if (db_->execute("DELETE FROM recursos WHERE id = ?;", {id_str}) == ComponentResult::SUCCESS)
+                {
+                    return HttpResponse().set_status(HttpStatusCode::OK).set_body("{\"status\": \"deleted\"}", "application/json");
+                }
+
+                return HttpResponse().set_status(HttpStatusCode::InternalServerError).set_body("{\"error\": \"Error al borrar registro en DB\"}", "application/json");
+            });
+
+            // --- 5. ENTREGA DINÁMICA DE ARCHIVOS (Zero-Copy y Seguridad) ---
+            server_->get("/recursos/*", [this](const HttpRequest& req) 
+            {
+                std::string prefix = "/recursos/";
+                std::string filename = req.path.substr(prefix.length());
+
+                // PREVENCIÓN CRÍTICA DE PATH TRAVERSAL
+                // Bloquea cualquier intento de retroceder directorios ("..") o inyectar subrutas ("/")
+                if (filename.empty() || filename.find("..") != std::string::npos || filename.find('/') != std::string::npos) 
+                {
+                    return HttpResponse().set_status(HttpStatusCode::Forbidden).set_body("Acceso denegado.", "text/plain");
+                }
+
+                std::string filepath = UPLOAD_DIR + filename;
                 
-                if (!file) return HttpResponse().set_status(HttpStatusCode::NotFound);
-                
-                std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
-                return HttpResponse().set_status(HttpStatusCode::OK).set_body(content, "application/octet-stream");
+                // Obtener información del archivo desde el sistema operativo sin cargarlo en memoria
+                struct stat file_stat;
+                if (stat(filepath.c_str(), &file_stat) != 0) 
+                {
+                    return HttpResponse().set_status(HttpStatusCode::NotFound).set_body("Archivo no encontrado en la isla.", "text/plain");
+                }
+
+                // Determinación del tipo MIME fundamental para el cliente
+                std::string content_type = "application/octet-stream";
+                if (filename.find(".pdf") != std::string::npos) content_type = "application/pdf";
+                else if (filename.find(".mp3") != std::string::npos) content_type = "audio/mpeg";
+                else if (filename.find(".png") != std::string::npos) content_type = "image/png";
+                else if (filename.find(".jpg") != std::string::npos || filename.find(".jpeg") != std::string::npos) content_type = "image/jpeg";
+                else if (filename.find(".epub") != std::string::npos) content_type = "application/epub+zip";
+
+                // Se instruye a la infraestructura a realizar una transferencia delegada
+                return HttpResponse().set_status(HttpStatusCode::OK).set_file(filepath, content_type, file_stat.st_size);
             });
         }
 

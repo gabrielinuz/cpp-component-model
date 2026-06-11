@@ -1,3 +1,13 @@
+/**
+ * @file http_server_component.hpp
+ * @author your name (you@domain.com)
+ * @brief 
+ * @version 0.1
+ * @date 2026-06-11
+ * 
+ * @copyright Copyright (c) 2026
+ * 
+ */
 #ifndef HTTP_SERVER_COMPONENT_HPP
 #define HTTP_SERVER_COMPONENT_HPP
 
@@ -12,6 +22,17 @@
 #include <netinet/in.h>
 #include <unistd.h>
 #include <fstream>
+
+/**
+ * @brief 
+ * cabeceras POSIX requeridas e interceptar 
+ * el flujo de la respuesta para ejecutar 
+ * sendfile si el objeto HttpResponse 
+ * contiene una ruta de archivo.
+ */
+#include <sys/sendfile.h>
+#include <fcntl.h>
+#include <sys/stat.h>
 
 class SocketRAII 
 {

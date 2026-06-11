@@ -84,19 +84,36 @@ async function cargarRecursosAdmin() {
         // Renderizado del listado
         data.contenidos.forEach(item => {
             const fila = crearElemento('div', 'admin-resource-item');
-            fila.style.borderBottom = "1px solid #333";
+            fila.style.borderBottom = "1px solid #ddd";
             fila.style.padding = "10px 0";
             fila.style.display = "flex";
             fila.style.justifyContent = "space-between";
+            fila.style.alignItems = "center";
             
             const info = crearElemento('span', '', `${item.titulo} - ${item.autor} (${item.tema})`);
             
-            const enlace = crearElemento('a', '', 'Abrir');
+            // Contenedor para agrupar los botones
+            const acciones = crearElemento('div');
+
+            const enlace = crearElemento('a', 'btn', 'Abrir');
             enlace.href = `/recursos/${item.file}`;
             enlace.target = "_blank";
-            enlace.style.color = "var(--accent)";
+            enlace.style.padding = "4px 8px";
+            enlace.style.fontSize = "0.85rem";
 
-            fila.append(info, enlace);
+            const btnBorrar = crearElemento('button', 'btn', 'Borrar');
+            btnBorrar.style.background = "#e74c3c";
+            btnBorrar.style.marginLeft = "10px";
+            btnBorrar.style.padding = "4px 8px";
+            btnBorrar.style.fontSize = "0.85rem";
+            btnBorrar.style.border = "none";
+            btnBorrar.style.cursor = "pointer";
+            
+            // Asignación del evento con el ID del recurso extraído de la DB
+            btnBorrar.onclick = () => eliminarRecurso(item.id);
+
+            acciones.append(enlace, btnBorrar);
+            fila.append(info, acciones);
             listaContenidos.appendChild(fila);
         });
 
@@ -104,6 +121,33 @@ async function cargarRecursosAdmin() {
         console.error("Error técnico al cargar contenidos:", error);
         listaContenidos.replaceChildren(crearElemento('p', '', 'Error de conexión con la API de contenidos.'));
         listaContenidos.style.color = "#e74c3c";
+    }
+}
+
+// Lógica de Negocio: Eliminación segura
+async function eliminarRecurso(id) {
+    if (!confirm("¿Atención: Esta acción eliminará permanentemente el archivo físico y su registro en la base de datos. ¿Desea continuar?")) {
+        return;
+    }
+
+    try {
+        const res = await fetch(`/api/contenidos?id=${id}`, {
+            method: 'DELETE',
+            headers: { 
+                'Authorization': localStorage.getItem('admin_token') 
+            }
+        });
+
+        if (res.ok) {
+            alert("Recurso eliminado correctamente.");
+            cargarRecursosAdmin(); // Refrescar el DOM visual
+        } else {
+            const err = await res.json();
+            alert(`Error del servidor: ${err.error}`);
+        }
+    } catch (error) {
+        alert("Excepción: Error de red al intentar borrar el recurso.");
+        console.error(error);
     }
 }
 
@@ -122,27 +166,36 @@ formUpload.addEventListener('submit', async (e) => {
     btnSubmit.textContent = "Procesando E/S...";
     statusMsg.textContent = "";
 
-    const formData = new FormData();
-    formData.append('archivo', fileInput.files[0]);
-    formData.append('titulo', document.getElementById('titulo').value);
-    formData.append('autor', document.getElementById('autor').value);
-    formData.append('tema', document.getElementById('tema').value);
+    const file = fileInput.files[0];
+    
+    // 1. Codificar los metadatos para que sean seguros en una URL
+    const titulo = encodeURIComponent(document.getElementById('titulo').value);
+    const autor = encodeURIComponent(document.getElementById('autor').value);
+    const tema = encodeURIComponent(document.getElementById('tema').value);
+    const filename = encodeURIComponent(file.name);
+
+    // 2. Construir la URL con la Query String esperada por el backend C++
+    const url = `/api/upload?titulo=${titulo}&autor=${autor}&tema=${tema}&filename=${filename}`;
 
     try {
-        const res = await fetch('/api/upload', {
+        // 3. Enviar el archivo directamente (RAW Binary) en el body
+        const res = await fetch(url, {
             method: 'POST',
-            headers: { 'Authorization': localStorage.getItem('admin_token') },
-            body: formData
+            headers: { 
+                'Authorization': localStorage.getItem('admin_token'),
+                'Content-Type': 'application/octet-stream'
+            },
+            body: file 
         });
 
         if (res.ok) {
             statusMsg.textContent = "Escritura en disco y metadata exitosa.";
             statusMsg.style.color = "#2ecc71";
             formUpload.reset(); 
-            cargarRecursosAdmin(); // Re-renderiza la lista para mostrar el nuevo archivo
+            cargarRecursosAdmin(); 
         } else {
             const err = await res.json();
-            statusMsg.textContent = `Error del servidor: ${err.error}`;
+            statusMsg.textContent = `Error del servidor: ${err.error || res.statusText}`;
             statusMsg.style.color = "#e74c3c";
         }
     } catch (error) {

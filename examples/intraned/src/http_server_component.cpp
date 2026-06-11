@@ -1,3 +1,7 @@
+/**
+ * @file http_server_component.cpp
+ * @brief Implementación concreta del servidor HTTP con soporte Zero-Copy.
+ */
 #include "http_server_component.hpp"
 
 HttpServerComponent::~HttpServerComponent() noexcept 
@@ -168,7 +172,7 @@ void HttpServerComponent::process_client(int client_fd)
         }
     }
 
-    /// ETAPA 3: Enrutamiento semantico por Verbo y Path
+    /// ETAPA 3: Enrutamiento semántico por Verbo y Path (Con soporte para Comodines)
     HttpResponse res;
     auto verb_it = routes_.find(req.method);
     if (verb_it != routes_.end()) 
@@ -176,11 +180,33 @@ void HttpServerComponent::process_client(int client_fd)
         auto path_it = verb_it->second.find(req.path);
         if (path_it != verb_it->second.end()) 
         {
-            res = path_it->second(req); // Ejecucion del handler especializado
+            res = path_it->second(req); // Ejecución del handler especializado (Coincidencia Exacta)
         } 
         else 
         {
-            res.set_status(HttpStatusCode::NotFound).set_body("Ruta no encontrada.", "text/plain");
+            // Fallback para evaluación de prefijos (Rutas dinámicas / Comodines)
+            bool route_found = false;
+            for (const auto& [registered_path, handler] : verb_it->second) 
+            {
+                if (!registered_path.empty() && registered_path.back() == '*') 
+                {
+                    // Extraer el prefijo (Ej: "/recursos/*" -> "/recursos/")
+                    std::string prefix = registered_path.substr(0, registered_path.length() - 1);
+                    
+                    // Si la ruta solicitada comienza exactamente con este prefijo
+                    if (req.path.find(prefix) == 0) 
+                    {
+                        res = handler(req);
+                        route_found = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!route_found) 
+            {
+                res.set_status(HttpStatusCode::NotFound).set_body("Ruta no encontrada.", "text/plain");
+            }
         }
     } 
     else 
@@ -188,13 +214,36 @@ void HttpServerComponent::process_client(int client_fd)
         res.set_status(HttpStatusCode::MethodNotAllowed).set_body("Metodo HTTP no soportado.", "text/plain");
     }
 
+    /// ETAPA 4: Envío de Cabeceras (y cuerpo si está en memoria)
     std::string response_str = res.to_string();
     send(client_socket.get(), response_str.c_str(), response_str.length(), 0);
 
+    /// ETAPA 5: Envío de Cuerpo Externo (Zero-Copy Transfer)
+    if (!res.get_file_path().empty()) 
+    {
+        // Ruta de alta eficiencia. Se delega la transferencia al kernel.
+        int file_fd = open(res.get_file_path().c_str(), O_RDONLY);
+        if (file_fd >= 0) 
+        {
+            struct stat stat_buf;
+            fstat(file_fd, &stat_buf);
+            off_t offset = 0;
+            
+            ssize_t bytes_sent = sendfile(client_socket.get(), file_fd, &offset, stat_buf.st_size);
+            
+            if (bytes_sent == -1) 
+            {
+                std::cerr << "[Error] Fallo en sendfile para: " << res.get_file_path() << "\n";
+            }
+            close(file_fd);
+        }
+    }
+
+    /// ETAPA 6: Logueo concurrente seguro de la transacción
     std::lock_guard<std::mutex> lock(console_mutex_);
     std::cout << "[" << req.method << "] " << req.path 
-            << " (Payload: " << req.body.size() << " bytes) -> " 
-            << get_status_text(res.get_status()) << "\n";
+              << " -> " << get_status_text(res.get_status()) 
+              << (res.get_file_path().empty() ? "" : " [Zero-Copy]") << "\n";
 }
 
 // --- EXPORTACIÓN DE C-API ---
