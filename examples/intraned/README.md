@@ -1,90 +1,90 @@
-# <img src="./public/img/favicon.png" width="45" height="45" align="center"> IntranEd
+# <img src="./www/img/favicon.png" width="45" height="45" align="center"> IntranEd
 
-**IntranEd** El proyecto "IntranEd" es un Servidor de Contenidos Educativos no solo es técnicamente sólido por su bajo consumo de recursos, sino que resuelve un problema real de soberanía digital y acceso a la información.
+**IntranEd** es un Servidor de Contenidos Educativos diseñado para operar como una "isla de conocimiento" en zonas con conectividad limitada. No solo es técnicamente sólido por su bajo consumo de recursos, sino que resuelve un problema real de soberanía digital y democratización del acceso a la información.
 
-Al usar C++ para el backend, garantizamos que el servidor pueda correr incluso en una vieja netbook del gobierno o una computadora recuperada con apenas 2GB de RAM, cumpliendo con los objetivos de GREENSOFT.
-
-# Isla de Conocimiento - EdTech Sostenible
-
-Este proyecto está diseñado bajo los principios de **Desarrollo Sostenible de Software (GREENSOFT)**. Permite crear redes locales de aprendizaje en zonas con conectividad limitada.
+Al utilizar C++ para el núcleo y un modelo de componentes dinámicos, se garantiza que el servidor pueda ejecutarse de manera eficiente incluso en hardware recuperado o netbooks educativas con apenas 2GB de RAM, cumpliendo estrictamente con los objetivos del modelo **GREENSOFT**.
 
 ---
 
-## Características Técnicas
-- **Backend:** C++ con `httplib` (Alto rendimiento, bajo consumo de RAM < 20MB).
-- **Frontend:** HTML5, CSS3 y JavaScript Vainilla (Sin frameworks pesados, carga instantánea).
-- **Persistencia:** Archivo JSON (Sin necesidad de servidores de base de datos externos).
+## ⧉ Impacto y Sostenibilidad (EdTech)
 
-## Impacto y Sostenibilidad
-- **Bajo Consumo:** Optimizado para correr en hardware reciclado o de bajos recursos.
-- **Offline-First:** Funciona de forma autónoma en intranets locales sin depender de la nube.
-- **Soberanía Digital:** Gestión local de materiales educativos (PDF, Audios, Partituras).
+Este proyecto está diseñado bajo los principios de **Desarrollo Sostenible de Software**:
+- **Bajo Consumo:** Optimizado para hardware de bajos recursos. Al evitar el renderizado del lado del servidor (SSR) y delegar la vista al cliente, se maximiza la eficiencia energética del procesador anfitrión.
+- **Offline-First:** Funciona de forma autónoma en intranets locales. Aloja libros (PDF/EPUB), audios y partituras para su descarga y visualización sin depender de la nube.
+- **Soberanía Digital:** Gestión local, privada y segura de materiales de estudio en escuelas o centros culturales, eludiendo los costos de una conexión a internet externa.
 
-## Características Principales
-En zonas con conectividad limitada, se pueden crear "islas" de conocimiento.
+---
 
-* El Proyecto: Un servidor que aloje libros (PDF/EPUB), audios y partituras, permitiendo la descarga y visualización local.
+## ⧉ Arquitectura y Tecnologías Utilizadas
 
-* Sustentabilidad: Al evitar el renderizado del lado del servidor (SSR) y delegar la lógica al cliente con JS puro, el backend solo se encarga de servir archivos y manejar metadatos, maximizando la eficiencia energética.
+El sistema abandona el uso de dependencias monolíticas de terceros en favor de un **Modelo de Componentes en C++** interactuando a través de una frontera binaria (ABI) segura.
 
-* Impacto: Democratiza el acceso a materiales de estudio en escuelas o centros culturales sin depender de una conexión a internet costosa o inexistente.
+### Infraestructura Backend (C++17)
+* **Application Host:** Orquestador minimalista que gestiona el ciclo de vida del sistema mediante RAII y punteros inteligentes.
+* **Componente Servidor HTTP (`libhttp_server.so`):** Módulo dinámico propio, concurrente y asíncrono. Soporta operaciones RESTful CRUD y despacho de archivos binarios puros.
+* **Componente Base de Datos (`libsqlite_handler.so`):** Integración con SQLite3 mediante sentencias preparadas nativas, eliminando la necesidad de un motor de base de datos externo ejecutándose en segundo plano.
+* **JSON for Modern C++:** Única dependencia externa (*header-only*) utilizada exclusivamente para la serialización de respuestas de red.
+
+### Frontend
+* **Vanilla JavaScript:** Lógica de cliente pura para la interacción con la API REST, prescindiendo de frameworks pesados.
+* **HTML5 & CSS3:** Maquetación semántica y diseño responsivo de carga instantánea.
 
 ## Instalación y Compilación
-1. Asegúrate de tener instalado `g++`.
+1. Asegúrese de tener instalado el compilador `g++` (soporte para C++17).
 
-2. Otorga permisos de ejecución al script de compilación:
+2. Otorgue permisos de ejecución al script de construcción:
    ```bash
    chmod +x build.sh
    ```
-3. Ejecutar el script build.sh o la línea de compilación directamente:
+3. Ejecute el script para compilar los componentes y el binario principal:
 ```bash
    ./build.sh
 ```
 
-4. Luego ejecutar en una terminal el binario generado:
+4. Inicie el servidor educativo::
 ```bash
-   ./build/intraned 
+   ./host.app 
 ```
 
 5. Abrir en un navegador web la url:
 ```text
    http://localhost:8080/
 ```
+## ⧉ Documentación de la API REST
 
-## Tecnologías Utilizadas
+El componente `HttpServer` expone los siguientes puntos de enlace (*endpoints*) para la interacción programática con la plataforma:
 
-### Backend
-* **Httplib:** Servidor robusto y escalable.
-* **Json for C++:** Gestión eficiente de subida de archivos binarios.
+### 1. Autenticación
+* **Ruta:** `POST /api/login`
+* **Descripción:** Valida las credenciales de administración y retorna un token de sesión.
+* **Cuerpo de la Petición (JSON):**
+  ```json
+  {
+    "password": "admin_password"
+  }
 
-### Frontend
-* **Vanilla JavaScript:** Lógica pura sin dependencias de frameworks pesados.
-* **Vanilla CSS:** Diseño con puro CSS sin frameworks.
+* **2.Respuesta Exitosa (200 OK)**
+  ```json
+   {
+      "token": "educacion_libre_2026"
+   }
 
-## Estructura del Proyecto
+
+---
+
+## ⧉ Estructura del Proyecto
 
 ```text
-├── build.sh
-├── main.cpp                 # (Minimalista, solo invoca a Application)
+├── build.sh                 # Script de compilación automatizada
+├── main.cpp                 # Punto de entrada y captura de fallos de infraestructura
 ├── include/
-│   ├── application.hpp      # <-- El nuevo núcleo del sistema
-│   ├── json.hpp             # <-- Dependencia header-only (nlohmann)
-│   ├── module_manager.hpp
-│   └── (todas las interfaces: i_http_server, i_database, etc.)
+│   ├── application.hpp      # Orquestador lógico y enrutador de la API
+│   ├── module_manager.hpp   # Cargador dinámico de bibliotecas compartidas
+│   └── i_*.hpp              # Contratos e interfaces virtuales puras
 ├── src/
-│   ├── http_server_component.cpp
-│   └── sqlite_component.cpp
-├── lib/                     # Binarios generados (.so)
+│   └── *_component.cpp      # Código fuente de los módulos dinámicos
+├── lib/                     # Destino de los binarios dinámicos (.so / .dll)
 ├── data/                    
-│   └── intraned.db          # Base de datos SQLite (reemplaza a metadata.json)
-├── uploads/                 # Almacenamiento físico de PDFs, MP3s, etc.
-└── www/                     # Sustituye a 'public'
-    ├── index.html
-    ├── admin.html
-    ├── login.html
-    ├── css/style.css
-    ├── js/
-    │   ├── admin.js
-    │   ├── login.js
-    │   └── public.js
-    └── img/favicon.png
+│   └── intraned.db          # Base de datos relacional local (SQLite)
+├── uploads/                 # Almacenamiento físico aislado de los recursos educativos
+└── www/                     # Directorio de entrega de activos estáticos web
