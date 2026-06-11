@@ -63,13 +63,46 @@ El componente `HttpServer` expone los siguientes puntos de enlace (*endpoints*) 
     "password": "admin_password"
   }
 
-* **2.Respuesta Exitosa (200 OK)**
+* **Respuesta Exitosa (200 OK)**
   ```json
    {
       "token": "educacion_libre_2026"
    }
 
+### 2. Consulta de Recursos
+* **Ruta:** `GET /api/contenidos`
+* **Descripción:** Retorna el catálogo completo de materiales educativos registrados en la base de datos local.
+* **Respuesta Exitosa (200 OK)**
+  ```json
+   {
+   "contenidos": [
+      {
+         "titulo": "Álgebra Lineal",
+         "autor": "Grossman",
+         "tema": "Matemática",
+         "file": "algebra.pdf"
+      }
+   ]
+   }
 
+### 3. Carga de Material Educativo (Ruta Protegida)
+* **Ruta:** `POST /api/upload`
+* **Descripción:** Sube un nuevo archivo al servidor y registra sus metadatos. El archivo físico debe enviarse en crudo (raw binary) en el cuerpo de la petición.
+* **Cabeceras requeridas:** `Authorization: <token_de_administracion>`
+* **Parámetros de URL (Query String):** `?titulo=<texto>&autor=<texto>&tema=<texto>&filename=<nombre_del_archivo.ext>`
+* **Cuerpo de la Petición (JSON):** Cuerpo de la Petición: Secuencia binaria del archivo.
+* **Respuesta Exitosa (201 Created)**
+  ```json
+   {
+   "status": "success"
+   }
+
+### 4. Carga de Material Educativo (Ruta Protegida)
+* **Ruta:** `GET /recursos`
+* **Descripción:** Despacha el contenido binario de un recurso educativo específico almacenado en el servidor.
+* **Parámetros de URL (Query String):** `?f=<nombre_del_archivo.ext>`
+* **Cuerpo de la Petición (JSON):** Cuerpo de la Petición: Secuencia binaria del archivo.
+* **Respuesta Exitosa (200 OK)** Flujo binario (application/octet-stream o tipo MIME correspondiente) del archivo solicitado.
 ---
 
 ## ⧉ Estructura del Proyecto
