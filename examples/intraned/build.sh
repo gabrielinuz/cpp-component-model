@@ -25,7 +25,7 @@ g++ -std=c++17 -shared -o lib/sqlite_handler.so sqlite_component.o sqlite3.o
 g++ -std=c++17 -I./include main.cpp -o host.app -ldl -pthread
 
 # 5. Ejecutar la aplicación
-./host.app
+# ./host.app
 
 # 6. Limpieza opcional de objetos intermedios
 rm *.o
