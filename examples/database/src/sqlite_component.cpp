@@ -2,7 +2,7 @@
 #define SQLITE_COMPONENT_HPP
 
 #include "../include/i_database.hpp"
-#include <sqlite3.h>
+#include "sqlite3.h"
 #include <iostream>
 
 class SqliteComponent : public IDatabase 
