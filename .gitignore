@@ -35,3 +35,8 @@
 #Build directory
 build/
 debug/
+
+#SQlite Database files
+*.db
+*.db-shm
+*.db-wal
