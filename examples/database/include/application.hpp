@@ -136,13 +136,18 @@ class Application
         {
             if (server_->start(3333) != ComponentResult::SUCCESS) 
             {
+                std::cerr << "Error de Negocio: El componente de servidor no fue instanciado." << std::endl;
                 return EXIT_FAILURE;
             }
 
             std::cout << "\n>> API REST Activa. Intenta navegar a http://localhost:3333/api/users <<\n" << std::endl;
+
+            std::cout << "\n>> Presiona ENTER para detener el servidor de forma segura <<\n" << std::endl;
             std::cin.get(); 
 
+            std::cout << "-> Deteniendo servicios..." << std::endl;
             server_->stop();
+
             return EXIT_SUCCESS;
         }
 };
