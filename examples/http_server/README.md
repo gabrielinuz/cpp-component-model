@@ -1,6 +1,6 @@
-# <img src="logo/logo.png" width="100" height="100" align="center"> CPP HTTP Server
+# <img src="logo/logo.png" width="100" height="100" align="center"> CPP HTTP Server Component
 
-## Servidor web de ejemplo para estudiantes de ingeniería de software
+## Componente Servidor Web de ejemplo para estudiantes de ingeniería de software
 
 ## Estructura de directorios
 * lib/ contiene los binarios dinámicos de infraestructura 
