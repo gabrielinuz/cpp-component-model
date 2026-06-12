@@ -13,6 +13,14 @@ borrar_si_existe() {
     fi
 }
 
+# Limpieza de archivos .o
+for archivo in *.o; do
+    # Verifica que sea un archivo regular antes de llamar a la función
+    if [ -f "$archivo" ]; then
+        borrar_si_existe "$archivo"
+    fi
+done
+
 # Limpieza de bibliotecas
 borrar_si_existe  "./lib/http_server.so"
 

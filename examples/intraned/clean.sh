@@ -22,6 +22,14 @@ for archivo in ./uploads/*; do
     fi
 done
 
+# Limpieza de archivos .o
+for archivo in *.o; do
+    # Verifica que sea un archivo regular antes de llamar a la función
+    if [ -f "$archivo" ]; then
+        borrar_si_existe "$archivo"
+    fi
+done
+
 # Limpieza de base de datos
 borrar_si_existe "./data/intraned.db"
 borrar_si_existe "./data/intraned.db-shm"

@@ -13,6 +13,15 @@ borrar_si_existe() {
     fi
 }
 
+# Limpieza de archivos .o
+# Itera sobre todos los elementos no ocultos del directorio actual
+for archivo in *.o; do
+    # Verifica que sea un archivo regular antes de llamar a la función
+    if [ -f "$archivo" ]; then
+        borrar_si_existe "$archivo"
+    fi
+done
+
 # Limpieza de base de datos
 borrar_si_existe "./data/app_database.db"
 borrar_si_existe "./data/app_database.db-shm"
