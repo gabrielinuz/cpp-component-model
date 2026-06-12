@@ -24,7 +24,7 @@ El sistema abandona el uso de dependencias monolíticas de terceros en favor de 
 * **Application Host:** Orquestador minimalista que gestiona el ciclo de vida del sistema mediante RAII y punteros inteligentes.
 * **Componente Servidor HTTP (`libhttp_server.so`):** Módulo dinámico propio, concurrente y asíncrono. Soporta operaciones RESTful CRUD y despacho de archivos binarios puros.
 * **Componente Base de Datos (`libsqlite_handler.so`):** Integración con SQLite3 mediante sentencias preparadas nativas, eliminando la necesidad de un motor de base de datos externo ejecutándose en segundo plano.
-* **JSON for Modern C++:** Única dependencia externa (*header-only*) utilizada exclusivamente para la serialización de respuestas de red.
+* **JSON for Modern C++:** Única dependencia externa (*header-only*) utilizada exclusivamente para la serialización de respuestas de red. https://github.com/nlohmann/json
 
 ### Frontend
 * **Vanilla JavaScript:** Lógica de cliente pura para la interacción con la API REST, prescindiendo de frameworks pesados.
@@ -61,7 +61,7 @@ El componente `HttpServer` expone los siguientes puntos de enlace (*endpoints*) 
 * **Cuerpo de la Petición (JSON):**
   ```json
   {
-    "password": "admin_password"
+     "password": "admin_password"
   }
 
 * **Respuesta Exitosa (200 OK)**
@@ -91,19 +91,31 @@ El componente `HttpServer` expone los siguientes puntos de enlace (*endpoints*) 
 * **Descripción:** Sube un nuevo archivo al servidor y registra sus metadatos. El archivo físico debe enviarse en crudo (raw binary) en el cuerpo de la petición.
 * **Cabeceras requeridas:** `Authorization: <token_de_administracion>`
 * **Parámetros de URL (Query String):** `?titulo=<texto>&autor=<texto>&tema=<texto>&filename=<nombre_del_archivo.ext>`
-* **Cuerpo de la Petición (JSON):** Cuerpo de la Petición: Secuencia binaria del archivo.
+* **Cuerpo de la Petición:** Secuencia binaria del archivo.
 * **Respuesta Exitosa (201 Created)**
   ```json
    {
-   "status": "success"
+      "status": "success"
    }
 
-### 4. Carga de Material Educativo (Ruta Protegida)
+### 4. Descarga de Material Educativo
 * **Ruta:** `GET /recursos`
 * **Descripción:** Despacha el contenido binario de un recurso educativo específico almacenado en el servidor.
 * **Parámetros de URL (Query String):** `?f=<nombre_del_archivo.ext>`
 * **Cuerpo de la Petición (JSON):** Cuerpo de la Petición: Secuencia binaria del archivo.
 * **Respuesta Exitosa (200 OK)** Flujo binario (application/octet-stream o tipo MIME correspondiente) del archivo solicitado.
+
+### 5. Borrado de Material Educativo (Ruta Protegida)
+* **Ruta:** `DELETE /api/contenidos`
+* **Descripción:** Elimina de forma permanente un recurso educativo. Realiza tanto el borrado lógico del registro en la base de datos SQLite como la eliminación física del archivo binario alojado en el disco.
+* **Cabeceras Requeridas:**
+  * `Authorization: <token_de_administracion>`
+* **Parámetros de URL (Query String):** `?id=<id_numerico_del_recurso>`
+* **Respuesta Exitosa (200 OK):**
+  ```json
+  {
+     "status": "deleted"
+  }
 ---
 
 ## ⧉ Estructura del Proyecto
