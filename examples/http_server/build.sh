@@ -14,8 +14,9 @@ g++ -std=c++17 -shared -pthread -o lib/http_server.so http_server_component.o
 # Enlazamos -ldl para dlopen y -pthread para dar soporte al entorno multihilo del componente cargado.
 g++ -std=c++17 main.cpp -o host.app -ldl -pthread
 
-# 3. Ejecutar la aplicación
+# 3. Limpieza opcional de objetos intermedios
+rm *.o
+
+# 4. Ejecutar la aplicación
 ./host.app
 
-# 4. Limpieza opcional de objetos intermedios
-rm *.o

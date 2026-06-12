@@ -12,7 +12,10 @@ g++ -std=c++17 -shared -o lib/greeter.so greeter_component.o
 
 # 2. Compilar el Ejecutable Principal
 # Necesitamos enlazar la biblioteca -ldl para poder usar dlopen, dlclose, dlsym en Linux
-g++ -std=c++17 main.cpp -o host_app.bin -ldl
+g++ -std=c++17 main.cpp -o host.app -ldl
 
-# 3. Ejecutar la aplicación
-./host_app.bin
+# 3. Limpieza opcional de objetos intermedios
+rm *.o
+
+# 4. Ejecutar la aplicación
+./host.app
