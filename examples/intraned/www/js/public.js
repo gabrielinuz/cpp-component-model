@@ -11,13 +11,6 @@ async function cargarRecursos() {
     }
 }
 
-function crearElemento(tag, clase, texto = "") {
-    const el = document.createElement(tag);
-    if (clase) el.className = clase;
-    if (texto) el.textContent = texto;
-    return el;
-}
-
 function renderizar(lista) {
     const contenedor = document.getElementById('contenedor-recursos');
     contenedor.replaceChildren(); // Limpia el contenedor de forma eficiente

@@ -1,10 +1,3 @@
-function crearElemento(tag, clase, texto = "") {
-    const el = document.createElement(tag);
-    if (clase) el.className = clase;
-    if (texto) el.textContent = texto;
-    return el;
-}
-
 const app = document.getElementById('app-login');
 
 const form = crearElemento('form', 'card');
