@@ -56,6 +56,7 @@ class Application
             server_->serve_static("/js/admin.js", "www/js/admin.js", "application/javascript");
             server_->serve_static("/js/login.js", "www/js/login.js", "application/javascript");
             server_->serve_static("/js/public.js", "www/js/public.js", "application/javascript");
+            server_->serve_static("/js/utils.js", "www/js/utils.js", "application/javascript");
 
             // --- 2. API: AUTENTICACIÓN ---
             server_->post("/api/login", [this](const HttpRequest& req) 
