@@ -1,7 +1,7 @@
 /**
  * @file module_manager.hpp
  * @author Gabriel Ferreira (gabrielinuz@fi.mdp.edu.ar)
- * @brief C Plus Plus Component Model
+ * @brief C Plus Plus Component Model: Cargador de módulos, seguro en presencia de concurrencia.
  * @version 1
  * @date 2026-05-19
  * 

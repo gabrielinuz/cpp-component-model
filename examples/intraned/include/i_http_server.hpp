@@ -1,3 +1,14 @@
+/**
+ * @file i_http_server.hpp
+ * @author Gabriel Ferreira (gabrielinuz@fi.mdp.edu.ar)
+ * @brief Interfaz de un componente de server HTTP
+ * @version 0.1
+ * @date 2026-06-16
+ * 
+ * @copyright Copyright (c) 2026 Released under the MIT license
+ * @link https://opensource.org/licenses/MIT @endlink
+ * 
+ */
 #ifndef I_HTTP_SERVER_HPP
 #define I_HTTP_SERVER_HPP
 

@@ -1,11 +1,12 @@
 /**
  * @file http_server_component.hpp
- * @author your name (you@domain.com)
- * @brief 
+ * @author Gabriel Ferreira (gabrielinuz@fi.mdp.edu.ar)
+ * @brief HTTP Server Component Example
  * @version 0.1
  * @date 2026-06-11
  * 
- * @copyright Copyright (c) 2026
+ * @copyright Copyright (c) 2026 Released under the MIT license
+ * @link https://opensource.org/licenses/MIT @endlink
  * 
  */
 #ifndef HTTP_SERVER_COMPONENT_HPP

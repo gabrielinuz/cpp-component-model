@@ -1,3 +1,14 @@
+/**
+ * @file application.hpp
+ * @author Gabriel Ferreira (gabrielinuz@fi.mdp.edu.ar)
+ * @brief Intraned Application: Servidor de Contenidos Educativos
+ * @version 1
+ * @date 2026-05-19
+ * 
+ * @copyright Copyright (c) 2026 Released under the MIT license
+ * @link https://opensource.org/licenses/MIT @endlink
+ * 
+ */
 #ifndef APPLICATION_HPP
 #define APPLICATION_HPP
 

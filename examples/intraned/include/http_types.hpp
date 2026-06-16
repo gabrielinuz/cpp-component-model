@@ -1,6 +1,13 @@
 /**
  * @file http_types.hpp
+ * @author Gabriel Ferreira (gabrielinuz@fi.mdp.edu.ar)
  * @brief Extension del sistema de tipos HTTP para soportar multiples verbos y datos binarios.
+ * @version 0.1
+ * @date 2026-06-11
+ * 
+ * @copyright Copyright (c) 2026 Released under the MIT license
+ * @link https://opensource.org/licenses/MIT @endlink
+ *
  */
 
 #ifndef HTTP_TYPES_HPP

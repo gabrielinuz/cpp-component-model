@@ -1,7 +1,7 @@
 /**
  * @file main.cpp
  * @author Gabriel Ferreira (gabrielinuz@fi.mdp.edu.ar)
- * @brief Punto de entrada del servidor de componentes.
+ * @brief Punto de entrada del servidor de recursos educativos Intraned
  * @version 1
  * @date 2026-06-09
  * @copyright Copyright (c) 2026 Released under the MIT license

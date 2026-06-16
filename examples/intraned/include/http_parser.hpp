@@ -1,6 +1,13 @@
 /**
  * @file http_parser.hpp
- * @brief Utilidades de parseo de cabeceras, parametros de consulta y decodificacion.
+ * @author Gabriel Ferreira (gabrielinuz@fi.mdp.edu.ar)
+ * @brief Utilidades de parseo de cabeceras, parámetros de consulta y decodificación.
+ * @version 0.1
+ * @date 2026-06-11
+ * 
+ * @copyright Copyright (c) 2026 Released under the MIT license
+ * @link https://opensource.org/licenses/MIT @endlink
+ *
  */
 
 #ifndef HTTP_PARSER_HPP

@@ -1,6 +1,13 @@
 /**
  * @file http_server_component.cpp
+ * @author Gabriel Ferreira (gabrielinuz@fi.mdp.edu.ar)
  * @brief Implementación concreta del servidor HTTP con soporte Zero-Copy.
+ * @version 0.1
+ * @date 2026-06-16
+ * 
+ * @copyright Copyright (c) 2026 Released under the MIT license
+ * @link https://opensource.org/licenses/MIT @endlink
+ * 
  */
 #include "http_server_component.hpp"
 
