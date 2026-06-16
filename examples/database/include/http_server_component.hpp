@@ -1,3 +1,14 @@
+/**
+ * @file http_server_component.hpp
+ * @author Gabriel Ferreira (gabrielinuz@fi.mdp.edu.ar)
+ * @brief HTTP Server Component Example
+ * @version 0.1
+ * @date 2026-06-11
+ * 
+ * @copyright Copyright (c) 2026 Released under the MIT license
+ * @link https://opensource.org/licenses/MIT @endlink
+ * 
+ */
 #ifndef HTTP_SERVER_COMPONENT_HPP
 #define HTTP_SERVER_COMPONENT_HPP
 
@@ -12,6 +23,17 @@
 #include <netinet/in.h>
 #include <unistd.h>
 #include <fstream>
+
+/**
+ * @brief 
+ * cabeceras POSIX requeridas e interceptar 
+ * el flujo de la respuesta para ejecutar 
+ * sendfile si el objeto HttpResponse 
+ * contiene una ruta de archivo.
+ */
+#include <sys/sendfile.h>
+#include <fcntl.h>
+#include <sys/stat.h>
 
 class SocketRAII 
 {

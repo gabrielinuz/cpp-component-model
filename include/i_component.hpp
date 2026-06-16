@@ -1,7 +1,7 @@
 /**
  * @file i_component.hpp
  * @author Gabriel Ferreira (gabrielinuz@fi.mdp.edu.ar)
- * @brief C Plus Plus Component Model
+ * @brief C Plus Plus Component Model: Interfaz que representa a un componente, incluyendo la C-API.
  * @version 1
  * @date 2026-05-19
  * 

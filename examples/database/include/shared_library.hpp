@@ -1,7 +1,7 @@
 /**
  * @file shared_library.hpp
  * @author Gabriel Ferreira (gabrielinuz@fi.mdp.edu.ar)
- * @brief C Plus Plus Component Model
+ * @brief C Plus Plus Component Model: manejador RAII de Bibliotecas Compartidas
  * @version 1
  * @date 2026-05-19
  * 

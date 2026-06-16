@@ -1,5 +1,5 @@
 /**
- * @file http_server_component.cpp
+ * @file sqlite_component.cpp
  * @author Gabriel Ferreira (gabrielinuz@fi.mdp.edu.ar)
  * @brief Implementación concreta de un componente manejador de base de datos Sqlite.
  * @version 0.1

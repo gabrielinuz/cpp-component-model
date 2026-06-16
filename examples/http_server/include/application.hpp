@@ -1,7 +1,7 @@
 /**
  * @file application.hpp
  * @author Gabriel Ferreira (gabrielinuz@fi.mdp.edu.ar)
- * @brief Orquestador de la aplicación REST utilizando el modelo de componentes.
+ * @brief Orquestador de la aplicación HTTP REST utilizando el modelo de componentes.
  * @version 1
  * @date 2026-06-09
  * @copyright Copyright (c) 2026 Released under the MIT license

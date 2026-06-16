@@ -1,3 +1,15 @@
+/**
+ * @file sqlite_component.cpp
+ * @author Gabriel Ferreira (gabrielinuz@fi.mdp.edu.ar)
+ * @brief Implementación concreta de un componente manejador de base de datos Sqlite.
+ * @version 0.1
+ * @date 2026-06-16
+ * 
+ * @copyright Copyright (c) 2026 Released under the MIT license
+ * @link https://opensource.org/licenses/MIT @endlink
+ * 
+ */
+
 #ifndef SQLITE_COMPONENT_HPP
 #define SQLITE_COMPONENT_HPP
 

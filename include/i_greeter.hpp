@@ -1,7 +1,7 @@
 /**
  * @file i_greeter.hpp
  * @author Gabriel Ferreira (gabrielinuz@fi.mdp.edu.ar)
- * @brief C Plus Plus Component Model
+ * @brief C Plus Plus Component Model: Interfaz del componente Greeter (saludador).
  * @version 1
  * @date 2026-05-19
  * 

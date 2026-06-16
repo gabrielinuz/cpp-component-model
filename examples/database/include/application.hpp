@@ -1,7 +1,7 @@
 /**
  * @file application.hpp
  * @author Gabriel Ferreira (gabrielinuz@fi.mdp.edu.ar)
- * @brief Aplicación
+ * @brief Aplicación ejemplo de manejador de Base de Datos
  * @version 1
  * @date 2026-06-09
  * @copyright Copyright (c) 2026 Released under the MIT license

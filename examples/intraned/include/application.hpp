@@ -1,7 +1,7 @@
 /**
  * @file application.hpp
  * @author Gabriel Ferreira (gabrielinuz@fi.mdp.edu.ar)
- * @brief Intraned Application: Servidor de Contenidos Educativos
+ * @brief Intraned Application: Servidor de Contenidos Educativos utilizando componentes.
  * @version 1
  * @date 2026-05-19
  * 
